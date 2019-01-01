@@ -17,6 +17,10 @@ WARN_STRING  = "[WARNING]"
 run: build
 	./go-pipeline
 
+## Build binaries
+build:
+	go build -ldflags "$(LDFLAGS)"
+
 ## Setup
 setup:
 	go get github.com/golang/lint/golint
@@ -24,7 +28,7 @@ setup:
 	go get github.com/Songmu/make2help/cmd/make2help
 
 ## Run tests
-test: setup
+test:
 	if go test ./... -v; then \
 		echo "$(OK_COLOR)$(OK_STRING) go test succeeded$(NO_COLOR)"; \
 	else \
@@ -32,19 +36,15 @@ test: setup
 	fi
 
 ## Lint
-lint: setup
+lint:
 	go vet $$(go list)
 	for pkg in $$(go list); do \
 		golint -set_exit_status $$pkg || exit $$?; \
 	done
 
 ## Format source codes
-fmt: setup
+fmt:
 	goimports -w main.go
-
-## Build binaries
-build:
-	go build -ldflags "$(LDFLAGS)"
 
 ## Show help
 help:
