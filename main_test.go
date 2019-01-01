@@ -17,6 +17,28 @@ func TestGeneratorInt(t *testing.T) {
 	}
 }
 
+func TestAdd(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	intCh := GeneratorInt(ctx, 1, 2, 3, 4)
+	for v := range Add(ctx, intCh, 1) {
+		fmt.Println(v)
+	}
+
+}
+
+func TestMultiply(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	intCh := GeneratorInt(ctx, 1, 2, 3, 4)
+	for v := range Multiply(ctx, intCh, 10) {
+		fmt.Println(v)
+	}
+
+}
+
 func TestRepeat(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
