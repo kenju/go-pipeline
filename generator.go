@@ -23,3 +23,26 @@ func GeneratorInt(
 
 	return intCh
 }
+
+// stage for converting String array to channel
+func GeneratorString(
+	ctx context.Context,
+	arr ...string,
+) <-chan string {
+	ch := make(chan string)
+
+	go func() {
+		defer close(ch)
+
+		for _, v := range arr {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- v:
+			}
+		}
+	}()
+
+	return ch
+}
+

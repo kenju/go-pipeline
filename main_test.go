@@ -17,6 +17,15 @@ func TestGeneratorInt(t *testing.T) {
 	}
 }
 
+func TestGeneratorString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	for v := range GeneratorString(ctx, "hello", "world", "!") {
+		fmt.Printf("%v ", v)
+	}
+}
+
 func TestAdd(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
