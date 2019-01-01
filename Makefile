@@ -13,9 +13,13 @@ OK_STRING    = "[OK]"
 ERROR_STRING = "[ERROR]"
 WARN_STRING  = "[WARNING]"
 
-## Build binaries and run
-run: build
-	./go-pipeline
+## Run tests
+test:
+	if go test ./... -v; then \
+		echo "$(OK_COLOR)$(OK_STRING) go test succeeded$(NO_COLOR)"; \
+	else \
+		echo "$(ERROR_COLOR)$(ERROR_STRING) go test failed$(NO_COLOR)n"; \
+	fi
 
 ## Build binaries
 build:
@@ -26,14 +30,6 @@ setup:
 	go get github.com/golang/lint/golint
 	go get golang.org/x/tools/cmd/goimports
 	go get github.com/Songmu/make2help/cmd/make2help
-
-## Run tests
-test:
-	if go test ./... -v; then \
-		echo "$(OK_COLOR)$(OK_STRING) go test succeeded$(NO_COLOR)"; \
-	else \
-		echo "$(ERROR_COLOR)$(ERROR_STRING) go test failed$(NO_COLOR)n"; \
-	fi
 
 ## Lint
 lint:
