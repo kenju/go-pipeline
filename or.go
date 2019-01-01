@@ -1,4 +1,4 @@
-package main
+package pipeline
 
 func Or(channels ...<-chan interface{}) <-chan interface{} {
 	switch len(channels) {
