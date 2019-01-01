@@ -67,6 +67,21 @@ func TestRepeatFn(t *testing.T) {
 	}
 }
 
+func TestFanIn(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	numChannels := 3
+	channels := make([]<-chan interface{}, numChannels)
+	for i := 0; i < numChannels; i++ {
+		channels[i] = Repeat(ctx, i)
+	}
+
+	for v := range Take(ctx, FanIn(ctx, channels...), 10) {
+		fmt.Println(v)
+	}
+}
+
 func TestOr(t *testing.T) {
 	sig := func(after time.Duration) <-chan interface{} {
 		c := make(chan interface{})
@@ -89,3 +104,4 @@ func TestOr(t *testing.T) {
 	<-Or(channels...)
 	fmt.Printf("done after %v", time.Since(start))
 }
+
