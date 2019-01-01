@@ -27,6 +27,27 @@ func Repeat(
 	return valueCh
 }
 
+func RepeatFn(
+	ctx context.Context,
+	fn func() interface{},
+) <-chan interface{} {
+	valueCh := make(chan interface{})
+
+	go func() {
+		defer close(valueCh)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case valueCh <- fn():
+			}
+		}
+	}()
+
+	return valueCh
+}
+
 func Take(
 	ctx context.Context,
 	valueCh <-chan interface{},
