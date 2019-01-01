@@ -104,4 +104,3 @@ func TestOr(t *testing.T) {
 	<-Or(channels...)
 	fmt.Printf("done after %v", time.Since(start))
 }
-
