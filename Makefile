@@ -31,6 +31,7 @@ setup:
 	go get golang.org/x/tools/cmd/goimports
 	go get github.com/Songmu/make2help/cmd/make2help
 	go get github.com/rakyll/gotest
+	go get github.com/cheekybits/genny
 
 ## Lint
 lint:
@@ -43,6 +44,11 @@ lint:
 fmt:
 	goimports -w main.go
 
+## Generate files with `go generate`
+gen:
+	go generate
+
+## Update CHANGELOG.md with auto-changelog
 changelog:
 	auto-changelog -t keepachangelog && git commit -am "update CHANGELOG"
 
