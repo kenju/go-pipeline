@@ -43,6 +43,9 @@ lint:
 fmt:
 	goimports -w main.go
 
+changelog:
+	auto-changelog -t keepachangelog && git commit -am "update CHANGELOG"
+
 ## Show help
 help:
 	@make2help $(MAKEFILE_LIST)
