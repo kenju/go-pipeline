@@ -2,6 +2,8 @@ package pipeline
 
 import "context"
 
+// MapInt calculate fn(v int) to each values from values argument.
+// Use ctx to cancel the stream processing.
 func MapInt(
 	ctx context.Context,
 	fn func(v int) int,

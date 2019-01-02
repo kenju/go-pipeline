@@ -4,6 +4,8 @@ import (
 	"context"
 )
 
+// Take return n of items from valueCh channel.
+// Use ctx to cancel the stream processing.
 func Take(
 	ctx context.Context,
 	valueCh <-chan interface{},

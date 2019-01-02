@@ -2,6 +2,8 @@ package pipeline
 
 import "context"
 
+// Add calculate addition to each values from intCh.
+// Use ctx to cancel the stream processing.
 func Add(
 	ctx context.Context,
 	intCh <-chan int,
@@ -24,6 +26,8 @@ func Add(
 	return addedCh
 }
 
+// Multiply calculate multiply to each values from intCh.
+// Use ctx to cancel the stream processing.
 func Multiply(
 	ctx context.Context,
 	intCh <-chan int,

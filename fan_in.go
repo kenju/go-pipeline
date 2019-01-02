@@ -5,6 +5,8 @@ import (
 	"context"
 )
 
+// FanIn multiplex multiple channels.
+// Use ctx to cancel the stream processing.
 func FanIn(
 	ctx context.Context,
 	channels ...<-chan interface{},

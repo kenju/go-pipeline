@@ -1,6 +1,10 @@
 package pipeline
 
-func Or(channels ...<-chan interface{}) <-chan interface{} {
+// Or return only the first result from multiple channels.
+// Use ctx to cancel the stream processing.
+func Or(
+	channels ...<-chan interface{},
+) <-chan interface{} {
 	switch len(channels) {
 	case 0: // when there are no channels to handle
 		return nil

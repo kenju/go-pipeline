@@ -4,6 +4,8 @@ import (
 	"context"
 )
 
+// Repeat return value via channel from values argument.
+// Use ctx to cancel the stream processing.
 func Repeat(
 	ctx context.Context,
 	values ...interface{},
@@ -27,6 +29,8 @@ func Repeat(
 	return valueCh
 }
 
+// RepeatFn call fn() via channel.
+// Use ctx to cancel the stream processing.
 func RepeatFn(
 	ctx context.Context,
 	fn func() interface{},

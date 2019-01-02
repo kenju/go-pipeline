@@ -2,6 +2,8 @@ package pipeline
 
 import "context"
 
+// ReduceInt reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
 func ReduceInt(
 	ctx context.Context,
 	fn func(v, acc int) int,
