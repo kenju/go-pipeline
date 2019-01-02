@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.9
+
+    working_directory: /go/src/github.com/kenju/goserver
+
+    steps:
+      - checkout
+
+      - run: make setup
+      - run: make lint
+      - run: make fmt
+      - run: make test
