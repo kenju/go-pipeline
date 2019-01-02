@@ -2,16 +2,18 @@ package pipeline
 
 import "context"
 
-// ReduceInt reduce values to the accumulator.
-// Use ctx to cancel the stream processing.
-func ReduceInt(
-	ctx context.Context,
-	fn func(v, acc int) int,
-	values <-chan int,
-) <-chan int {
-	ch := make(chan int)
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int"
 
-	var acc int
+// ReduceGenType reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
+func ReduceGenType(
+	ctx context.Context,
+	fn func(v, acc GenType) GenType,
+	values <-chan GenType,
+) <-chan GenType {
+	ch := make(chan GenType)
+
+	var acc GenType
 	go func() {
 		defer close(ch)
 

@@ -16,3 +16,13 @@ func TestReduceInt(t *testing.T) {
 		fmt.Println(v)
 	}
 }
+
+func TestReduceString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	reduceFn := func(v, acc string) string { return acc + "!!" + v }
+	for v := range pipeline.ReduceString(ctx, reduceFn, pipeline.GeneratorString(ctx, "hello", "world")) {
+		fmt.Println(v)
+	}
+}
