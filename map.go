@@ -1,15 +1,19 @@
 package pipeline
 
-import "context"
+import (
+	"context"
+)
 
-// MapInt calculate fn(v int) to each values from values argument.
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int"
+
+// MapGenType calculate fn(v GenType) to each values from values argument.
 // Use ctx to cancel the stream processing.
-func MapInt(
+func MapGenType(
 	ctx context.Context,
-	fn func(v int) int,
-	values <-chan int,
-) <-chan interface{} {
-	ch := make(chan interface{})
+	fn func(v GenType) GenType,
+	values <-chan GenType,
+) <-chan GenType {
+	ch := make(chan GenType)
 
 	go func() {
 		defer close(ch)

@@ -16,3 +16,13 @@ func TestMapInt(t *testing.T) {
 		fmt.Println(v)
 	}
 }
+
+func TestMapString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	mapFn := func(v string) string { return "**" + v + "**"}
+	for v := range pipeline.MapString(ctx, mapFn, pipeline.GeneratorString(ctx, "hello", "world")) {
+		fmt.Println(v)
+	}
+}

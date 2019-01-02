@@ -2,12 +2,9 @@ package pipeline
 
 import (
 	"context"
-	"github.com/cheekybits/genny/generic"
-)
+	)
 
 //go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int"
-
-type GenType generic.Type
 
 // GeneratorGenType generates channels from GenType array
 // Use ctx to cancel the stream processing.
