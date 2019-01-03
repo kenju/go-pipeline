@@ -1,5 +1,7 @@
 # go-pipeline
 
+[![CircleCI](https://circleci.com/gh/kenju/go-pipeline.svg?style=svg)](https://circleci.com/gh/kenju/go-pipeline)
+
 Inspired by "Concurrency in Go" from O'reilly's chapter 4.
 
 # Install
