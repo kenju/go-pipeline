@@ -2,12 +2,12 @@
 
 [![CircleCI](https://circleci.com/gh/kenju/go-pipeline.svg?style=svg)](https://circleci.com/gh/kenju/go-pipeline)
 
-Inspired by "Concurrency in Go" from O'reilly's chapter 4.
+- [Documentation (godoc.org)](https://godoc.org/github.com/kenju/go-pipeline)
 
 # Install
 
 ```sh
-$ go get -u github.com/kenju/go-pipeline
+$ go get github.com/kenju/go-pipeline
 ```
 
 # Development
