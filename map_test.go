@@ -26,3 +26,13 @@ func TestMapString(t *testing.T) {
 		fmt.Println(v)
 	}
 }
+
+func TestMapFloat32(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	mapFn := func(v float32) float32 { return v + 0.1 }
+	for v := range pipeline.MapFloat32(ctx, mapFn, pipeline.GeneratorFloat32(ctx, 1.1, 2.2, 3.3)) {
+		fmt.Println(v)
+	}
+}

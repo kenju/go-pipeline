@@ -2,7 +2,7 @@ package pipeline
 
 import "context"
 
-//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int"
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int,float32"
 
 // ReduceGenType reduce values to the accumulator.
 // Use ctx to cancel the stream processing.

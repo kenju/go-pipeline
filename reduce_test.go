@@ -26,3 +26,13 @@ func TestReduceString(t *testing.T) {
 		fmt.Println(v)
 	}
 }
+
+func TestReduceFloat32(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	reduceFn := func(v, acc float32) float32 { return v + acc }
+	for v := range pipeline.ReduceFloat32(ctx, reduceFn, pipeline.GeneratorFloat32(ctx, 1.1, 2.2, 3.3)) {
+		fmt.Println(v)
+	}
+}

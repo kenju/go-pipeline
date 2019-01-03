@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int"
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int,float32"
 
 // MapGenType calculate fn(v GenType) to each values from values argument.
 // Use ctx to cancel the stream processing.

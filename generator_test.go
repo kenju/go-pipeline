@@ -24,3 +24,12 @@ func TestGeneratorString(t *testing.T) {
 		fmt.Printf("%v ", v)
 	}
 }
+
+func TestGeneratorFloat32(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	for v := range pipeline.GeneratorFloat32(ctx, 1.1, 2.2, 3.3) {
+		fmt.Printf("%v ", v)
+	}
+}
