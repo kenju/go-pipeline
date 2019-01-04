@@ -12,7 +12,7 @@ func TestTake(t *testing.T) {
 	defer cancel()
 
 	var results []interface{}
-	for v := range pipeline.Take(ctx, pipeline.Repeat(ctx, 1), 3) {
+	for v := range pipeline.TakeInterface(ctx, pipeline.RepeatInterface(ctx, 1), 3) {
 		results = append(results, v)
 	}
 

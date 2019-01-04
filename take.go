@@ -4,26 +4,28 @@ import (
 	"context"
 )
 
-// Take return n of items from valueCh channel.
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,float32"
+
+// TakeGenType return n of GenType items from valueCh channel.
 // Use ctx to cancel the stream processing.
-func Take(
+func TakeGenType(
 	ctx context.Context,
-	valueCh <-chan interface{},
+	valueCh <-chan GenType,
 	num int,
-) <-chan interface{} {
-	takeCh := make(chan interface{})
+) <-chan GenType {
+	ch := make(chan GenType)
 
 	go func() {
-		defer close(takeCh)
+		defer close(ch)
 
 		for i := 0; i < num; i++ {
 			select {
 			case <-ctx.Done():
 				return
-			case takeCh <- <-valueCh:
+			case ch <- <-valueCh:
 			}
 		}
 	}()
 
-	return takeCh
+	return ch
 }

@@ -4,50 +4,52 @@ import (
 	"context"
 )
 
-// Repeat return value via channel from values argument.
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,float32"
+
+// RepeatGenType return value via channel from values argument.
 // Use ctx to cancel the stream processing.
-func Repeat(
+func RepeatGenType(
 	ctx context.Context,
-	values ...interface{},
-) <-chan interface{} {
-	valueCh := make(chan interface{})
+	values ...GenType,
+) <-chan GenType {
+	ch := make(chan GenType)
 
 	go func() {
-		defer close(valueCh)
+		defer close(ch)
 
 		for {
 			for _, v := range values {
 				select {
 				case <-ctx.Done():
 					return
-				case valueCh <- v:
+				case ch <- v:
 				}
 			}
 		}
 	}()
 
-	return valueCh
+	return ch
 }
 
-// RepeatFn call fn() via channel.
+// RepeatFnGenType call fn() via channel.
 // Use ctx to cancel the stream processing.
-func RepeatFn(
+func RepeatFnGenType(
 	ctx context.Context,
-	fn func() interface{},
-) <-chan interface{} {
-	valueCh := make(chan interface{})
+	fn func() GenType,
+) <-chan GenType {
+	ch := make(chan GenType)
 
 	go func() {
-		defer close(valueCh)
+		defer close(ch)
 
 		for {
 			select {
 			case <-ctx.Done():
 				return
-			case valueCh <- fn():
+			case ch <- fn():
 			}
 		}
 	}()
 
-	return valueCh
+	return ch
 }

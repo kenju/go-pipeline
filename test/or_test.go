@@ -26,7 +26,7 @@ func TestOr(t *testing.T) {
 		sig(1 * time.Minute),
 	}
 
-	<-pipeline.Or(channels...)
+	<-pipeline.OrInterface(channels...)
 	fmt.Printf("done after %v", time.Since(start))
 }
 

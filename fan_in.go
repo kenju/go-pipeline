@@ -5,19 +5,21 @@ import (
 	"context"
 )
 
-// FanIn multiplex multiple channels.
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,float32"
+
+// FanInGenType multiplex multiple channels.
 // Use ctx to cancel the stream processing.
-func FanIn(
+func FanInGenType(
 	ctx context.Context,
-	channels ...<-chan interface{},
-) <-chan interface{} {
+	channels ...<-chan GenType,
+) <-chan GenType {
 	var wg sync.WaitGroup
 
 	// select from all the channels
 	wg.Add(len(channels))
 
-	multiplexedCh := make(chan interface{})
-	multiplex := func(c <-chan interface{}) {
+	multiplexedCh := make(chan GenType)
+	multiplex := func(c <-chan GenType) {
 		defer wg.Done()
 		for i := range c {
 			select {

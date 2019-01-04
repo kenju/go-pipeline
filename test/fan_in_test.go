@@ -14,10 +14,10 @@ func TestFanIn(t *testing.T) {
 	numChannels := 3
 	channels := make([]<-chan interface{}, numChannels)
 	for i := 0; i < numChannels; i++ {
-		channels[i] = pipeline.Repeat(ctx, i)
+		channels[i] = pipeline.RepeatInterface(ctx, i)
 	}
 
-	for v := range pipeline.Take(ctx, pipeline.FanIn(ctx, channels...), 10) {
+	for v := range pipeline.TakeInterface(ctx, pipeline.FanInInterface(ctx, channels...), 10) {
 		fmt.Printf("%v ", v)
 	}
 }

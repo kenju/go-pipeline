@@ -6,6 +6,30 @@ package pipeline
 
 import "context"
 
+// TakeInterface return n of interface{} items from valueCh channel.
+// Use ctx to cancel the stream processing.
+func TakeInterface(
+	ctx context.Context,
+	valueCh <-chan interface{},
+	num int,
+) <-chan interface{} {
+	ch := make(chan interface{})
+
+	go func() {
+		defer close(ch)
+
+		for i := 0; i < num; i++ {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- <-valueCh:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // TakeString return n of string items from valueCh channel.
 // Use ctx to cancel the stream processing.
 func TakeString(

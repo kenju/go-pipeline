@@ -6,6 +6,54 @@ package pipeline
 
 import "context"
 
+// RepeatInterface return value via channel from values argument.
+// Use ctx to cancel the stream processing.
+func RepeatInterface(
+	ctx context.Context,
+	values ...interface{},
+) <-chan interface{} {
+	ch := make(chan interface{})
+
+	go func() {
+		defer close(ch)
+
+		for {
+			for _, v := range values {
+				select {
+				case <-ctx.Done():
+					return
+				case ch <- v:
+				}
+			}
+		}
+	}()
+
+	return ch
+}
+
+// RepeatFnInterface call fn() via channel.
+// Use ctx to cancel the stream processing.
+func RepeatFnInterface(
+	ctx context.Context,
+	fn func() interface{},
+) <-chan interface{} {
+	ch := make(chan interface{})
+
+	go func() {
+		defer close(ch)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn():
+			}
+		}
+	}()
+
+	return ch
+}
+
 // RepeatString return value via channel from values argument.
 // Use ctx to cancel the stream processing.
 func RepeatString(

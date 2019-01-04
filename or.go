@@ -1,10 +1,12 @@
 package pipeline
 
-// Or return only the first result from multiple channels.
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,float32"
+
+// OrGenType return only the first result from multiple channels.
 // Use ctx to cancel the stream processing.
-func Or(
-	channels ...<-chan interface{},
-) <-chan interface{} {
+func OrGenType(
+	channels ...<-chan GenType,
+) <-chan GenType {
 	switch len(channels) {
 	case 0: // when there are no channels to handle
 		return nil
@@ -12,7 +14,7 @@ func Or(
 		return channels[0]
 	}
 
-	orDone := make(chan interface{})
+	orDone := make(chan GenType)
 	go func() {
 		defer close(orDone)
 
@@ -27,7 +29,7 @@ func Or(
 			case <-channels[0]:
 			case <-channels[1]:
 			case <-channels[2]:
-			case <-Or(append(channels[3:], orDone)...):
+			case <-OrGenType(append(channels[3:], orDone)...):
 				// here, recursively call or() to after the 3rd channel
 			}
 		}

@@ -12,7 +12,7 @@ func TestRepeat(t *testing.T) {
 	defer cancel()
 
 	var results []interface{}
-	for v := range pipeline.Take(ctx, pipeline.Repeat(ctx, 1), 10) {
+	for v := range pipeline.TakeInterface(ctx, pipeline.RepeatInterface(ctx, 1), 10) {
 		results = append(results, v)
 	}
 
@@ -28,7 +28,7 @@ func TestRepeatFn(t *testing.T) {
 
 	var results []interface{}
 	repeatFn := func() interface{} { return 3 }
-	for v := range pipeline.Take(ctx, pipeline.RepeatFn(ctx, repeatFn), 5) {
+	for v := range pipeline.TakeInterface(ctx, pipeline.RepeatFnInterface(ctx, repeatFn), 5) {
 		results = append(results, v)
 	}
 
