@@ -18,7 +18,7 @@ func TestFanIn(t *testing.T) {
 	}
 
 	for v := range pipeline.Take(ctx, pipeline.FanIn(ctx, channels...), 10) {
-		fmt.Println(v)
+		fmt.Printf("%v ", v)
 	}
 }
 
@@ -33,7 +33,7 @@ func TestFanInString(t *testing.T) {
 	}
 
 	for v := range pipeline.TakeString(ctx, pipeline.FanInString(ctx, channels...), 10) {
-		fmt.Println(v)
+		fmt.Printf("%v ", v)
 	}
 }
 
@@ -48,7 +48,7 @@ func TestFanInInt(t *testing.T) {
 	}
 
 	for v := range pipeline.TakeInt(ctx, pipeline.FanInInt(ctx, channels...), 10) {
-		fmt.Println(v)
+		fmt.Printf("%v ", v)
 	}
 }
 
@@ -63,6 +63,6 @@ func TestFanInFloat32(t *testing.T) {
 	}
 
 	for v := range pipeline.TakeFloat32(ctx, pipeline.FanInFloat32(ctx, channels...), 10) {
-		fmt.Println(v)
+		fmt.Printf("%v ", v)
 	}
 }
