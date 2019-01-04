@@ -50,14 +50,14 @@ func TestMapFloat32(t *testing.T) {
 		results = append(results, v)
 	}
 
+	float32AlmostEqual := func(a, b float32) bool {
+		return math.Abs(float64(a)-float64(b)) <= 1e-1
+	}
+
 	expected := []float32{1.2, 2.3, 3.3}
 	for i, v := range results {
 		if !float32AlmostEqual(v, expected[i]) {
 			t.Errorf("expected %.6f, got %.6f", expected[i], v)
 		}
 	}
-}
-
-func float32AlmostEqual(a, b float32) bool {
-	return math.Abs(float64(a) - float64(b)) <= 1e-1
 }
