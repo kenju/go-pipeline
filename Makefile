@@ -19,6 +19,7 @@ setup:
 	go get github.com/Songmu/make2help/cmd/make2help
 	go get github.com/rakyll/gotest
 	go get github.com/cheekybits/genny
+	go get github.com/kenju/go-pipeline # for CI
 
 ## Lint
 lint:
