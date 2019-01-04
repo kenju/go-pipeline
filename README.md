@@ -2,7 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/kenju/go-pipeline.svg?style=svg)](https://circleci.com/gh/kenju/go-pipeline)
 
-- [Documentation (godoc.org)](https://godoc.org/github.com/kenju/go-pipeline)
+- [Documentation](https://godoc.org/github.com/kenju/go-pipeline)
+- [Changelog](https://github.com/kenju/go-pipeline/blob/master/CHANGELOG.md)
 
 # Install
 
