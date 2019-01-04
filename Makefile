@@ -4,9 +4,13 @@ REVISION := $(shell git rev-parse --short HEAD)
 LDFLAGS := -X 'main.version=$(VERSION)' \
 	-X 'main.revision=$(REVISION)'
 
+## Show help
+help:
+	@make2help $(MAKEFILE_LIST)
+
 ## Run tests
 test:
-	gotest ./... -v -parallel=4
+	gotest ./test/*_test.go -v -parallel=4
 
 ## Build binaries
 build:
@@ -39,7 +43,3 @@ gen:
 ## Update CHANGELOG.md with auto-changelog
 changelog:
 	auto-changelog -t keepachangelog && git commit -am "update CHANGELOG"
-
-## Show help
-help:
-	@make2help $(MAKEFILE_LIST)
