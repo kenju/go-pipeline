@@ -43,3 +43,5 @@ gen:
 ## Update CHANGELOG.md with auto-changelog
 changelog:
 	auto-changelog -t keepachangelog && git commit -am "update CHANGELOG"
+
+.PHONY: test
