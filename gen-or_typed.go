@@ -4,7 +4,7 @@
 
 package pipeline
 
-// Or return only the first result from multiple channels.
+// OrString return only the first result from multiple channels.
 // Use ctx to cancel the stream processing.
 func OrString(
 	channels ...<-chan string,
@@ -39,7 +39,7 @@ func OrString(
 	return orDone
 }
 
-// Or return only the first result from multiple channels.
+// OrInt return only the first result from multiple channels.
 // Use ctx to cancel the stream processing.
 func OrInt(
 	channels ...<-chan int,
@@ -74,7 +74,7 @@ func OrInt(
 	return orDone
 }
 
-// Or return only the first result from multiple channels.
+// OrFloat32 return only the first result from multiple channels.
 // Use ctx to cancel the stream processing.
 func OrFloat32(
 	channels ...<-chan float32,

@@ -2,7 +2,7 @@ package pipeline
 
 //go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=string,int,float32"
 
-// Or return only the first result from multiple channels.
+// OrGenType return only the first result from multiple channels.
 // Use ctx to cancel the stream processing.
 func OrGenType(
 	channels ...<-chan GenType,
