@@ -101,3 +101,27 @@ func TakeFloat32(
 
 	return ch
 }
+
+// TakeFloat64 return n of float64 items from valueCh channel.
+// Use ctx to cancel the stream processing.
+func TakeFloat64(
+	ctx context.Context,
+	valueCh <-chan float64,
+	num int,
+) <-chan float64 {
+	ch := make(chan float64)
+
+	go func() {
+		defer close(ch)
+
+		for i := 0; i < num; i++ {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- <-valueCh:
+			}
+		}
+	}()
+
+	return ch
+}

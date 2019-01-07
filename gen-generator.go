@@ -74,3 +74,26 @@ func GeneratorFloat32(
 
 	return ch
 }
+
+// GeneratorFloat64 generates channels from float64 array
+// Use ctx to cancel the stream processing.
+func GeneratorFloat64(
+	ctx context.Context,
+	values ...float64,
+) <-chan float64 {
+	ch := make(chan float64, len(values))
+
+	go func() {
+		defer close(ch)
+
+		for _, v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- v:
+			}
+		}
+	}()
+
+	return ch
+}

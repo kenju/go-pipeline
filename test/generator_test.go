@@ -51,3 +51,18 @@ func TestGeneratorFloat32(t *testing.T) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}
 }
+
+func TestGeneratorFloat64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []float64
+	for v := range pipeline.GeneratorFloat64(ctx, 1.1, 2.2, 3.3) {
+		results = append(results, v)
+	}
+
+	expected := []float64{1.1, 2.2, 3.3}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
