@@ -130,3 +130,34 @@ func TestRepeatFnFloat32(t *testing.T) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}
 }
+
+func TestRepeatFloat64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []float64
+	for v := range pipeline.TakeFloat64(ctx, pipeline.RepeatFloat64(ctx, 1.1), 5) {
+		results = append(results, v)
+	}
+
+	expected := []float64{1.1, 1.1, 1.1, 1.1, 1.1}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestRepeatFnFloat64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []float64
+	repeatFn := func() float64 { return 1.1 }
+	for v := range pipeline.TakeFloat64(ctx, pipeline.RepeatFnFloat64(ctx, repeatFn), 5) {
+		results = append(results, v)
+	}
+
+	expected := []float64{1.1, 1.1, 1.1, 1.1, 1.1}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}

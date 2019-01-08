@@ -197,3 +197,51 @@ func RepeatFnFloat32(
 
 	return ch
 }
+
+// RepeatFloat64 return value via channel from values argument.
+// Use ctx to cancel the stream processing.
+func RepeatFloat64(
+	ctx context.Context,
+	values ...float64,
+) <-chan float64 {
+	ch := make(chan float64)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			for _, v := range values {
+				select {
+				case <-ctx.Done():
+					return
+				case ch <- v:
+				}
+			}
+		}
+	}()
+
+	return ch
+}
+
+// RepeatFnFloat64 call fn() via channel.
+// Use ctx to cancel the stream processing.
+func RepeatFnFloat64(
+	ctx context.Context,
+	fn func() float64,
+) <-chan float64 {
+	ch := make(chan float64)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn():
+			}
+		}
+	}()
+
+	return ch
+}
