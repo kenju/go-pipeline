@@ -22,6 +22,21 @@ func TestGeneratorInt(t *testing.T) {
 	}
 }
 
+func TestGeneratorUint64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []uint64
+	for v := range pipeline.GeneratorUint64(ctx, 1, 2, 3, 4) {
+		results = append(results, v)
+	}
+
+	expected := []uint64{1, 2, 3, 4}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestGeneratorString(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
