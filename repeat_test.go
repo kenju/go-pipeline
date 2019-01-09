@@ -100,6 +100,37 @@ func TestRepeatFnInt(t *testing.T) {
 	}
 }
 
+func TestRepeatUint64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []uint64
+	for v := range pipeline.TakeUint64(ctx, pipeline.RepeatUint64(ctx, 1), 10) {
+		results = append(results, v)
+	}
+
+	expected := []uint64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestRepeatFnUint64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []uint64
+	repeatFn := func() uint64 { return 9 }
+	for v := range pipeline.TakeUint64(ctx, pipeline.RepeatFnUint64(ctx, repeatFn), 5) {
+		results = append(results, v)
+	}
+
+	expected := []uint64{9, 9, 9, 9, 9}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestRepeatFloat32(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
