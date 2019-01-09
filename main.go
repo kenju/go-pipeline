@@ -1,8 +1,7 @@
 /*
- Concurrent stream-processing library in Go.
-
- Repository: https://github.com/kenju/go-pipeline
- */
+Package pipeline is the concurrent stream-processing library in Go.
+Repository: https://github.com/kenju/go-pipeline
+*/
 package pipeline
 
 import (

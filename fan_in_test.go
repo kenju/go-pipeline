@@ -6,7 +6,7 @@ import (
 	"github.com/kenju/go-pipeline"
 )
 
-func ExampleFanIn() {
+func ExampleFanInInterface() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
