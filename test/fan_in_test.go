@@ -1,13 +1,12 @@
 package pipeline_test
 
 import (
-	"testing"
-	"fmt"
 	"context"
+	"fmt"
 	"github.com/kenju/go-pipeline"
 )
 
-func TestFanIn(t *testing.T) {
+func ExampleFanIn() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -22,7 +21,7 @@ func TestFanIn(t *testing.T) {
 	}
 }
 
-func TestFanInString(t *testing.T) {
+func ExampleFanInString() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -37,7 +36,7 @@ func TestFanInString(t *testing.T) {
 	}
 }
 
-func TestFanInInt(t *testing.T) {
+func ExampleFanInInt() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -52,7 +51,7 @@ func TestFanInInt(t *testing.T) {
 	}
 }
 
-func TestFanInFloat32(t *testing.T) {
+func ExampleFanInFloat32() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

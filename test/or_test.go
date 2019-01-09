@@ -7,7 +7,7 @@ import (
 	"github.com/kenju/go-pipeline"
 )
 
-func TestOr(t *testing.T) {
+func ExampleOr() {
 	sig := func(after time.Duration) <-chan interface{} {
 		c := make(chan interface{})
 		go func() {
@@ -30,7 +30,7 @@ func TestOr(t *testing.T) {
 	fmt.Printf("done after %v", time.Since(start))
 }
 
-func TestOrString(t *testing.T) {
+func ExampleOrString() {
 	sig := func(after time.Duration) <-chan string {
 		c := make(chan string)
 		go func() {
@@ -53,7 +53,7 @@ func TestOrString(t *testing.T) {
 	fmt.Printf("done after %v", time.Since(start))
 }
 
-func TestOrInt(t *testing.T) {
+func ExampleOrInt() {
 	sig := func(after time.Duration) <-chan int {
 		c := make(chan int)
 		go func() {
@@ -76,7 +76,7 @@ func TestOrInt(t *testing.T) {
 	fmt.Printf("done after %v", time.Since(start))
 }
 
-func TestOrFloat32(t *testing.T) {
+func ExampleOrFloat32() {
 	sig := func(after time.Duration) <-chan float32 {
 		c := make(chan float32)
 		go func() {
