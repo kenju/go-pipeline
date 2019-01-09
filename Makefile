@@ -10,7 +10,7 @@ help:
 
 ## Run tests
 test:
-	gotest ./test/*_test.go -v -parallel=4
+	gotest ./... -v -parallel=4
 
 ## Build binaries
 build:

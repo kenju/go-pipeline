@@ -1,10 +1,9 @@
 package pipeline_test
 
 import (
-	"testing"
-	"time"
 	"fmt"
 	"github.com/kenju/go-pipeline"
+	"time"
 )
 
 func ExampleOr() {
