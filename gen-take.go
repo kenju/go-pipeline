@@ -78,6 +78,30 @@ func TakeInt(
 	return ch
 }
 
+// TakeUint64 return n of uint64 items from valueCh channel.
+// Use ctx to cancel the stream processing.
+func TakeUint64(
+	ctx context.Context,
+	valueCh <-chan uint64,
+	num int,
+) <-chan uint64 {
+	ch := make(chan uint64)
+
+	go func() {
+		defer close(ch)
+
+		for i := 0; i < num; i++ {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- <-valueCh:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // TakeFloat32 return n of float32 items from valueCh channel.
 // Use ctx to cancel the stream processing.
 func TakeFloat32(

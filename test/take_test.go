@@ -37,6 +37,21 @@ func TestTakeInt(t *testing.T) {
 	}
 }
 
+func TestTakeUint64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []uint64
+	for v := range pipeline.TakeUint64(ctx, pipeline.GeneratorUint64(ctx, 1, 2, 3), 1) {
+		results = append(results, v)
+	}
+
+	expected := []uint64{1}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestTakeString(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
