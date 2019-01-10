@@ -6,6 +6,29 @@ package pipeline
 
 import "context"
 
+// GeneratorInterface generates channels from interface{} array
+// Use ctx to cancel the stream processing.
+func GeneratorInterface(
+	ctx context.Context,
+	values ...interface{},
+) <-chan interface{} {
+	ch := make(chan interface{}, len(values))
+
+	go func() {
+		defer close(ch)
+
+		for _, v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- v:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // GeneratorString generates channels from string array
 // Use ctx to cancel the stream processing.
 func GeneratorString(

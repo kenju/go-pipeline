@@ -7,6 +7,21 @@ import (
 	"reflect"
 )
 
+func TestGeneratorInterface(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []interface{}
+	for v := range pipeline.GeneratorInterface(ctx, 1, 2, 3, 4) {
+		results = append(results, v)
+	}
+
+	expected := []interface {}{1, 2, 3, 4}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestGeneratorInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
