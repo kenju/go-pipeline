@@ -8,6 +8,22 @@ import (
 	"math"
 )
 
+func TestMapInterface(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []interface{}
+	mapFn := func(v interface{}) interface {} { return v }
+	for v := range pipeline.MapInterface(ctx, mapFn, pipeline.GeneratorInterface(ctx, 1, 2, 3, 4)) {
+		results = append(results, v)
+	}
+
+	expected := []interface {}{1, 2, 3, 4}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestMapInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

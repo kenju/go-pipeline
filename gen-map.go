@@ -6,6 +6,30 @@ package pipeline
 
 import "context"
 
+// MapInterface calculate fn(v Interface) to each values from values argument.
+// Use ctx to cancel the stream processing.
+func MapInterface(
+	ctx context.Context,
+	fn func(v interface{}) interface{},
+	values <-chan interface{},
+) <-chan interface{} {
+	ch := make(chan interface{})
+
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn(v):
+			}
+		}
+	}()
+
+	return ch
+}
+
 // MapString calculate fn(v String) to each values from values argument.
 // Use ctx to cancel the stream processing.
 func MapString(
