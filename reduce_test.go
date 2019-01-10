@@ -1,12 +1,28 @@
 package pipeline_test
 
 import (
-	"testing"
 	"context"
 	"github.com/kenju/go-pipeline"
-	"reflect"
 	"math"
+	"reflect"
+	"testing"
 )
+
+func TestReduceInterface(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []interface{}
+	reduceFn := func(v, acc interface{}) interface{} { return v }
+	for v := range pipeline.ReduceInterface(ctx, reduceFn, pipeline.GeneratorInterface(ctx, 1, 2, 3, 4, 5)) {
+		results = append(results, v)
+	}
+
+	expected := []interface{}{1, 2, 3, 4, 5}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
 
 func TestReduceInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())

@@ -6,6 +6,33 @@ package pipeline
 
 import "context"
 
+// ReduceInterface reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
+func ReduceInterface(
+	ctx context.Context,
+	fn func(v, acc interface{}) interface{},
+	values <-chan interface{},
+) <-chan interface{} {
+	ch := make(chan interface{})
+
+	var acc interface{}
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				acc = fn(v, acc)
+				ch <- acc
+			}
+		}
+	}()
+
+	return ch
+}
+
 // ReduceString reduce values to the accumulator.
 // Use ctx to cancel the stream processing.
 func ReduceString(
