@@ -40,6 +40,22 @@ func TestMapInt(t *testing.T) {
 	}
 }
 
+func TestMapUint64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []uint64
+	mapFn := func(v uint64) uint64 { return v + 1 }
+	for v := range pipeline.MapUint64(ctx, mapFn, pipeline.GeneratorUint64(ctx, 1, 2, 3, 4)) {
+		results = append(results, v)
+	}
+
+	expected := []uint64{2, 3, 4, 5}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestMapString(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
