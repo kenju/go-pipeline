@@ -40,6 +40,22 @@ func TestReduceInt(t *testing.T) {
 	}
 }
 
+func TestReduceUint64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []uint64
+	reduceFn := func(v, acc uint64) uint64 { return v + acc }
+	for v := range pipeline.ReduceUint64(ctx, reduceFn, pipeline.GeneratorUint64(ctx, 1, 2, 3, 4, 5)) {
+		results = append(results, v)
+	}
+
+	expected := []uint64{1, 3, 6, 10, 15}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestReduceString(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

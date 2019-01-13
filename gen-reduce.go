@@ -60,6 +60,33 @@ func ReduceString(
 	return ch
 }
 
+// ReduceUint64 reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
+func ReduceUint64(
+	ctx context.Context,
+	fn func(v, acc uint64) uint64,
+	values <-chan uint64,
+) <-chan uint64 {
+	ch := make(chan uint64)
+
+	var acc uint64
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				acc = fn(v, acc)
+				ch <- acc
+			}
+		}
+	}()
+
+	return ch
+}
+
 // ReduceInt reduce values to the accumulator.
 // Use ctx to cancel the stream processing.
 func ReduceInt(
