@@ -75,6 +75,29 @@ func ExampleOrInt() {
 	fmt.Printf("done after %v", time.Since(start))
 }
 
+func ExampleOrUint64() {
+	sig := func(after time.Duration) <-chan uint64 {
+		c := make(chan uint64)
+		go func() {
+			defer close(c)
+			time.Sleep(after)
+		}()
+		return c
+	}
+
+	start := time.Now()
+	channels := []<-chan uint64{
+		sig(2 * time.Hour),
+		sig(5 * time.Minute),
+		sig(1 * time.Second), // the close message of this channel will close the whole channels
+		sig(1 * time.Hour),
+		sig(1 * time.Minute),
+	}
+
+	<-pipeline.OrUint64(channels...)
+	fmt.Printf("done after %v", time.Since(start))
+}
+
 func ExampleOrFloat32() {
 	sig := func(after time.Duration) <-chan float32 {
 		c := make(chan float32)

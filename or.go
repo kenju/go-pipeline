@@ -1,6 +1,6 @@
 package pipeline
 
-//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,float32"
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,uint64,float32"
 
 // OrGenType return only the first result from multiple channels.
 // Use ctx to cancel the stream processing.
