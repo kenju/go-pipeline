@@ -21,21 +21,6 @@ func ExampleFanInInterface() {
 	}
 }
 
-func ExampleFanInString() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	numChannels := 3
-	channels := make([]<-chan string, numChannels)
-	for i := 0; i < numChannels; i++ {
-		channels[i] = pipeline.RepeatString(ctx, fmt.Sprintf("id:%d", i))
-	}
-
-	for v := range pipeline.TakeString(ctx, pipeline.FanInString(ctx, channels...), 10) {
-		fmt.Printf("%v ", v)
-	}
-}
-
 func ExampleFanInInt() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -47,6 +32,36 @@ func ExampleFanInInt() {
 	}
 
 	for v := range pipeline.TakeInt(ctx, pipeline.FanInInt(ctx, channels...), 10) {
+		fmt.Printf("%v ", v)
+	}
+}
+
+func ExampleFanInUint64() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	numChannels := 3
+	channels := make([]<-chan uint64, numChannels)
+	for i := 0; i < numChannels; i++ {
+		channels[i] = pipeline.RepeatUint64(ctx, uint64(i))
+	}
+
+	for v := range pipeline.TakeUint64(ctx, pipeline.FanInUint64(ctx, channels...), 10) {
+		fmt.Printf("%v ", v)
+	}
+}
+
+func ExampleFanInString() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	numChannels := 3
+	channels := make([]<-chan string, numChannels)
+	for i := 0; i < numChannels; i++ {
+		channels[i] = pipeline.RepeatString(ctx, fmt.Sprintf("id:%d", i))
+	}
+
+	for v := range pipeline.TakeString(ctx, pipeline.FanInString(ctx, channels...), 10) {
 		fmt.Printf("%v ", v)
 	}
 }

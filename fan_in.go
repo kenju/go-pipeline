@@ -5,7 +5,7 @@ import (
 	"context"
 )
 
-//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,float32"
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},string,int,uint64,float32"
 
 // FanInGenType multiplex multiple channels.
 // Use ctx to cancel the stream processing.
