@@ -125,3 +125,27 @@ func MapFloat32(
 
 	return ch
 }
+
+// MapFloat64 calculate fn(v Float64) to each values from values argument.
+// Use ctx to cancel the stream processing.
+func MapFloat64(
+	ctx context.Context,
+	fn func(v float64) float64,
+	values <-chan float64,
+) <-chan float64 {
+	ch := make(chan float64)
+
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn(v):
+			}
+		}
+	}()
+
+	return ch
+}

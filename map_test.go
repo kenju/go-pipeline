@@ -83,12 +83,34 @@ func TestMapFloat32(t *testing.T) {
 	}
 
 	float32AlmostEqual := func(a, b float32) bool {
-		return math.Abs(float64(a)-float64(b)) <= 1e-1
+		return math.Abs(float64(a)-float64(b)) <= 1e-6
 	}
 
-	expected := []float32{1.2, 2.3, 3.3}
+	expected := []float32{1.2, 2.3, 3.4}
 	for i, v := range results {
 		if !float32AlmostEqual(v, expected[i]) {
+			t.Errorf("expected %.6f, got %.6f", expected[i], v)
+		}
+	}
+}
+
+func TestMapFloat64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []float64
+	mapFn := func(v float64) float64 { return v + 0.1 }
+	for v := range pipeline.MapFloat64(ctx, mapFn, pipeline.GeneratorFloat64(ctx, 1.1, 2.2, 3.3)) {
+		results = append(results, v)
+	}
+
+	float64AlmostEqual := func(a, b float64) bool {
+		return math.Abs(float64(a)-float64(b)) <= 1e-15
+	}
+
+	expected := []float64{1.2, 2.3, 3.4}
+	for i, v := range results {
+		if !float64AlmostEqual(v, expected[i]) {
 			t.Errorf("expected %.6f, got %.6f", expected[i], v)
 		}
 	}
