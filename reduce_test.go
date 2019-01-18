@@ -83,12 +83,34 @@ func TestReduceFloat32(t *testing.T) {
 	}
 
 	float32AlmostEqual := func(a, b float32) bool {
-		return math.Abs(float64(a)-float64(b)) <= 1e-1
+		return math.Abs(float64(a)-float64(b)) <= 1e-6
 	}
 
 	expected := []float32{1.1, 3.3, 6.6}
 	for i, v := range results {
 		if !float32AlmostEqual(v, expected[i]) {
+			t.Errorf("expected %.6f, got %.6f", expected[i], v)
+		}
+	}
+}
+
+func TestReduceFloat64(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []float64
+	reduceFn := func(v, acc float64) float64 { return v + acc }
+	for v := range pipeline.ReduceFloat64(ctx, reduceFn, pipeline.GeneratorFloat64(ctx, 1.1, 2.2, 3.3)) {
+		results = append(results, v)
+	}
+
+	float64AlmostEqual := func(a, b float64) bool {
+		return math.Abs(float64(a)-float64(b)) <= 1e-15
+	}
+
+	expected := []float64{1.1, 3.3, 6.6}
+	for i, v := range results {
+		if !float64AlmostEqual(v, expected[i]) {
 			t.Errorf("expected %.6f, got %.6f", expected[i], v)
 		}
 	}

@@ -140,3 +140,30 @@ func ReduceFloat32(
 
 	return ch
 }
+
+// ReduceFloat64 reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
+func ReduceFloat64(
+	ctx context.Context,
+	fn func(v, acc float64) float64,
+	values <-chan float64,
+) <-chan float64 {
+	ch := make(chan float64)
+
+	var acc float64
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				acc = fn(v, acc)
+				ch <- acc
+			}
+		}
+	}()
+
+	return ch
+}
