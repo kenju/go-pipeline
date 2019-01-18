@@ -11,6 +11,30 @@
 $ go get github.com/kenju/go-pipeline
 ```
 
+# Usage
+
+```go
+ctx, cancel := context.WithCancel(context.Background())
+defer cancel()
+
+for v := range pipeline.TakeInt(ctx, pipeline.GeneratorInt(ctx, 1, 2, 3, 4, 5), 3) {
+    fmt.Printf("%v ", v)
+    // 1 2 3
+}
+```
+
+```go
+ctx, cancel := context.WithCancel(context.Background())
+defer cancel()
+
+mapFn := func(v string) string { return "**" + v + "**" }
+for v := range pipeline.MapString(ctx, mapFn, pipeline.GeneratorString(ctx, "hello", "world")) {
+    fmt.Println(v)
+    // **hello**
+    // **world**
+}
+```
+
 # Development
 
 ## Update CHANGELOG.md
