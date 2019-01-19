@@ -178,3 +178,38 @@ func OrFloat32(
 	}()
 	return orDone
 }
+
+// OrFloat64 return only the first result from multiple channels.
+// Use ctx to cancel the stream processing.
+func OrFloat64(
+	channels ...<-chan float64,
+) <-chan float64 {
+	switch len(channels) {
+	case 0: // when there are no channels to handle
+		return nil
+	case 1: // when there is only one channel in the list
+		return channels[0]
+	}
+
+	orDone := make(chan float64)
+	go func() {
+		defer close(orDone)
+
+		switch len(channels) {
+		case 2:
+			select {
+			case <-channels[0]:
+			case <-channels[1]:
+			}
+		default:
+			select {
+			case <-channels[0]:
+			case <-channels[1]:
+			case <-channels[2]:
+			case <-OrFloat64(append(channels[3:], orDone)...):
+				// here, recursively call or() to after the 3rd channel
+			}
+		}
+	}()
+	return orDone
+}
