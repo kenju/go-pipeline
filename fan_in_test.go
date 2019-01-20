@@ -80,3 +80,18 @@ func ExampleFanInFloat32() {
 		fmt.Printf("%v ", v)
 	}
 }
+
+func ExampleFanInFloat64() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	numChannels := 3
+	channels := make([]<-chan float64, numChannels)
+	for i := 0; i < numChannels; i++ {
+		channels[i] = pipeline.RepeatFloat64(ctx, float64(i + 1) * 0.1)
+	}
+
+	for v := range pipeline.TakeFloat64(ctx, pipeline.FanInFloat64(ctx, channels...), 10) {
+		fmt.Printf("%v ", v)
+	}
+}

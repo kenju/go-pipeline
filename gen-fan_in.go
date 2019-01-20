@@ -183,3 +183,38 @@ func FanInFloat32(
 
 	return multiplexedCh
 }
+
+// FanInFloat64 multiplex multiple channels.
+// Use ctx to cancel the stream processing.
+func FanInFloat64(
+	ctx context.Context,
+	channels ...<-chan float64,
+) <-chan float64 {
+	var wg sync.WaitGroup
+
+	// select from all the channels
+	wg.Add(len(channels))
+
+	multiplexedCh := make(chan float64)
+	multiplex := func(c <-chan float64) {
+		defer wg.Done()
+		for i := range c {
+			select {
+			case <-ctx.Done():
+				return
+			case multiplexedCh <- i:
+			}
+		}
+	}
+	for _, c := range channels {
+		go multiplex(c)
+	}
+
+	// close a channel for multiplexing when all channels are processed
+	go func() {
+		wg.Wait()
+		close(multiplexedCh)
+	}()
+
+	return multiplexedCh
+}
