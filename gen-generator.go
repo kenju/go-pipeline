@@ -29,6 +29,29 @@ func GeneratorInterface(
 	return ch
 }
 
+// GeneratorByte generates channels from byte array
+// Use ctx to cancel the stream processing.
+func GeneratorByte(
+	ctx context.Context,
+	values ...byte,
+) <-chan byte {
+	ch := make(chan byte, len(values))
+
+	go func() {
+		defer close(ch)
+
+		for _, v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- v:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // GeneratorString generates channels from string array
 // Use ctx to cancel the stream processing.
 func GeneratorString(

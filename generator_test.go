@@ -22,6 +22,36 @@ func TestGeneratorInterface(t *testing.T) {
 	}
 }
 
+func TestGeneratorByte(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []byte
+	for v := range pipeline.GeneratorByte(ctx, 0, 1, 2) {
+		results = append(results, v)
+	}
+
+	expected := []byte{0, 1, 2}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestGeneratorString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []string
+	for v := range pipeline.GeneratorString(ctx, "hello", "world", "!") {
+		results = append(results, v)
+	}
+
+	expected := []string{"hello", "world", "!"}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestGeneratorInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -47,21 +77,6 @@ func TestGeneratorUint64(t *testing.T) {
 	}
 
 	expected := []uint64{1, 2, 3, 4}
-	if !reflect.DeepEqual(results, expected) {
-		t.Errorf("expected %v, got %v", expected, results)
-	}
-}
-
-func TestGeneratorString(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	var results []string
-	for v := range pipeline.GeneratorString(ctx, "hello", "world", "!") {
-		results = append(results, v)
-	}
-
-	expected := []string{"hello", "world", "!"}
 	if !reflect.DeepEqual(results, expected) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}
