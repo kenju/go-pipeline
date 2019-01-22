@@ -54,6 +54,54 @@ func RepeatFnInterface(
 	return ch
 }
 
+// RepeatByte return value via channel from values argument.
+// Use ctx to cancel the stream processing.
+func RepeatByte(
+	ctx context.Context,
+	values ...byte,
+) <-chan byte {
+	ch := make(chan byte)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			for _, v := range values {
+				select {
+				case <-ctx.Done():
+					return
+				case ch <- v:
+				}
+			}
+		}
+	}()
+
+	return ch
+}
+
+// RepeatFnByte call fn() via channel.
+// Use ctx to cancel the stream processing.
+func RepeatFnByte(
+	ctx context.Context,
+	fn func() byte,
+) <-chan byte {
+	ch := make(chan byte)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn():
+			}
+		}
+	}()
+
+	return ch
+}
+
 // RepeatString return value via channel from values argument.
 // Use ctx to cancel the stream processing.
 func RepeatString(
