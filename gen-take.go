@@ -30,6 +30,30 @@ func TakeInterface(
 	return ch
 }
 
+// TakeByte return n of byte items from valueCh channel.
+// Use ctx to cancel the stream processing.
+func TakeByte(
+	ctx context.Context,
+	valueCh <-chan byte,
+	num int,
+) <-chan byte {
+	ch := make(chan byte)
+
+	go func() {
+		defer close(ch)
+
+		for i := 0; i < num; i++ {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- <-valueCh:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // TakeString return n of string items from valueCh channel.
 // Use ctx to cancel the stream processing.
 func TakeString(

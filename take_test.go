@@ -22,6 +22,37 @@ func TestTake(t *testing.T) {
 	}
 }
 
+func TestTakeByte(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []byte
+	for v := range pipeline.TakeByte(ctx, pipeline.GeneratorByte(ctx, 0x01, 0x02, 0x03), 1) {
+		results = append(results, v)
+	}
+
+	expected := []byte{0x01}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestTakeString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []string
+	for v := range pipeline.TakeString(ctx, pipeline.GeneratorString(ctx, "hello", "world", "!"), 1) {
+		results = append(results, v)
+	}
+
+	expected := []string{"hello"}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+
 func TestTakeInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -47,21 +78,6 @@ func TestTakeUint64(t *testing.T) {
 	}
 
 	expected := []uint64{1}
-	if !reflect.DeepEqual(results, expected) {
-		t.Errorf("expected %v, got %v", expected, results)
-	}
-}
-
-func TestTakeString(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	var results []string
-	for v := range pipeline.TakeString(ctx, pipeline.GeneratorString(ctx, "hello", "world", "!"), 1) {
-		results = append(results, v)
-	}
-
-	expected := []string{"hello"}
 	if !reflect.DeepEqual(results, expected) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}

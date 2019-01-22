@@ -27,11 +27,11 @@ func TestGeneratorByte(t *testing.T) {
 	defer cancel()
 
 	var results []byte
-	for v := range pipeline.GeneratorByte(ctx, 0, 1, 2) {
+	for v := range pipeline.GeneratorByte(ctx, 0x01, 0x02, 0x03) {
 		results = append(results, v)
 	}
 
-	expected := []byte{0, 1, 2}
+	expected := []byte{0x01, 0x02, 0x03}
 	if !reflect.DeepEqual(results, expected) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}
