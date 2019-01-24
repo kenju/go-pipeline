@@ -24,6 +24,38 @@ func TestMapInterface(t *testing.T) {
 	}
 }
 
+func TestMapByte(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []byte
+	mapFn := func(v byte) byte { return v << 1 }
+	for v := range pipeline.MapByte(ctx, mapFn, pipeline.GeneratorByte(ctx, 0x01, 0x02, 0x03)) {
+		results = append(results, v)
+	}
+
+	expected := []byte{0x02, 0x04, 0x06}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestMapString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []string
+	mapFn := func(v string) string { return "**" + v + "**" }
+	for v := range pipeline.MapString(ctx, mapFn, pipeline.GeneratorString(ctx, "hello", "world")) {
+		results = append(results, v)
+	}
+
+	expected := []string{"**hello**", "**world**"}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestMapInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -51,22 +83,6 @@ func TestMapUint64(t *testing.T) {
 	}
 
 	expected := []uint64{2, 3, 4, 5}
-	if !reflect.DeepEqual(results, expected) {
-		t.Errorf("expected %v, got %v", expected, results)
-	}
-}
-
-func TestMapString(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	var results []string
-	mapFn := func(v string) string { return "**" + v + "**" }
-	for v := range pipeline.MapString(ctx, mapFn, pipeline.GeneratorString(ctx, "hello", "world")) {
-		results = append(results, v)
-	}
-
-	expected := []string{"**hello**", "**world**"}
 	if !reflect.DeepEqual(results, expected) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}
