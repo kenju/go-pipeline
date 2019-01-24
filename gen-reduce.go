@@ -33,6 +33,33 @@ func ReduceInterface(
 	return ch
 }
 
+// ReduceByte reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
+func ReduceByte(
+	ctx context.Context,
+	fn func(v, acc byte) byte,
+	values <-chan byte,
+) <-chan byte {
+	ch := make(chan byte)
+
+	var acc byte
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				acc = fn(v, acc)
+				ch <- acc
+			}
+		}
+	}()
+
+	return ch
+}
+
 // ReduceString reduce values to the accumulator.
 // Use ctx to cancel the stream processing.
 func ReduceString(

@@ -24,6 +24,39 @@ func TestReduceInterface(t *testing.T) {
 	}
 }
 
+func TestReduceByte(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []byte
+	reduceFn := func(v, acc byte) byte { return acc + v }
+	for v := range pipeline.ReduceByte(ctx, reduceFn, pipeline.GeneratorByte(ctx, 0x01, 0x02, 0x04)) {
+		results = append(results, v)
+	}
+
+	expected := []byte{0x01, 0x03, 0x07}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestReduceString(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []string
+	reduceFn := func(v, acc string) string { return acc + "!!" + v }
+	for v := range pipeline.ReduceString(ctx, reduceFn, pipeline.GeneratorString(ctx, "hello", "world")) {
+		results = append(results, v)
+	}
+
+	expected := []string{"!!hello", "!!hello!!world"}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+
 func TestReduceInt(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -51,22 +84,6 @@ func TestReduceUint64(t *testing.T) {
 	}
 
 	expected := []uint64{1, 3, 6, 10, 15}
-	if !reflect.DeepEqual(results, expected) {
-		t.Errorf("expected %v, got %v", expected, results)
-	}
-}
-
-func TestReduceString(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	var results []string
-	reduceFn := func(v, acc string) string { return acc + "!!" + v }
-	for v := range pipeline.ReduceString(ctx, reduceFn, pipeline.GeneratorString(ctx, "hello", "world")) {
-		results = append(results, v)
-	}
-
-	expected := []string{"!!hello", "!!hello!!world"}
 	if !reflect.DeepEqual(results, expected) {
 		t.Errorf("expected %v, got %v", expected, results)
 	}
