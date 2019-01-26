@@ -44,6 +44,41 @@ func FanInInterface(
 	return multiplexedCh
 }
 
+// FanInByte multiplex multiple channels.
+// Use ctx to cancel the stream processing.
+func FanInByte(
+	ctx context.Context,
+	channels ...<-chan byte,
+) <-chan byte {
+	var wg sync.WaitGroup
+
+	// select from all the channels
+	wg.Add(len(channels))
+
+	multiplexedCh := make(chan byte)
+	multiplex := func(c <-chan byte) {
+		defer wg.Done()
+		for i := range c {
+			select {
+			case <-ctx.Done():
+				return
+			case multiplexedCh <- i:
+			}
+		}
+	}
+	for _, c := range channels {
+		go multiplex(c)
+	}
+
+	// close a channel for multiplexing when all channels are processed
+	go func() {
+		wg.Wait()
+		close(multiplexedCh)
+	}()
+
+	return multiplexedCh
+}
+
 // FanInString multiplex multiple channels.
 // Use ctx to cancel the stream processing.
 func FanInString(
