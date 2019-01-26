@@ -29,6 +29,29 @@ func ExampleOrInterface() {
 	fmt.Printf("done after %v", time.Since(start))
 }
 
+func ExampleOrByte() {
+	sig := func(after time.Duration) <-chan byte {
+		c := make(chan byte)
+		go func() {
+			defer close(c)
+			time.Sleep(after)
+		}()
+		return c
+	}
+
+	start := time.Now()
+	channels := []<-chan byte{
+		sig(2 * time.Hour),
+		sig(5 * time.Minute),
+		sig(1 * time.Second), // the close message of this channel will close the whole channels
+		sig(1 * time.Hour),
+		sig(1 * time.Minute),
+	}
+
+	<-pipeline.OrByte(channels...)
+	fmt.Printf("done after %v", time.Since(start))
+}
+
 func ExampleOrString() {
 	sig := func(after time.Duration) <-chan string {
 		c := make(chan string)
