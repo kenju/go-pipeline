@@ -29,6 +29,29 @@ func GeneratorInterface(
 	return ch
 }
 
+// GeneratorBool generates channels from bool array
+// Use ctx to cancel the stream processing.
+func GeneratorBool(
+	ctx context.Context,
+	values ...bool,
+) <-chan bool {
+	ch := make(chan bool, len(values))
+
+	go func() {
+		defer close(ch)
+
+		for _, v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- v:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // GeneratorByte generates channels from byte array
 // Use ctx to cancel the stream processing.
 func GeneratorByte(

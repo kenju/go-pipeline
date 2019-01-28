@@ -22,6 +22,21 @@ func TestGeneratorInterface(t *testing.T) {
 	}
 }
 
+func TestGeneratorBool(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []bool
+	for v := range pipeline.GeneratorBool(ctx, true, false, true) {
+		results = append(results, v)
+	}
+
+	expected := []bool{true, false, true}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestGeneratorByte(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
