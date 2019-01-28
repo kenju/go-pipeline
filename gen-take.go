@@ -30,6 +30,30 @@ func TakeInterface(
 	return ch
 }
 
+// TakeBool return n of bool items from valueCh channel.
+// Use ctx to cancel the stream processing.
+func TakeBool(
+	ctx context.Context,
+	valueCh <-chan bool,
+	num int,
+) <-chan bool {
+	ch := make(chan bool)
+
+	go func() {
+		defer close(ch)
+
+		for i := 0; i < num; i++ {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- <-valueCh:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // TakeByte return n of byte items from valueCh channel.
 // Use ctx to cancel the stream processing.
 func TakeByte(

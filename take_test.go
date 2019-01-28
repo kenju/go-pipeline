@@ -22,6 +22,21 @@ func TestTake(t *testing.T) {
 	}
 }
 
+func TestTakeBool(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []bool
+	for v := range pipeline.TakeBool(ctx, pipeline.GeneratorBool(ctx, true, false, true), 1) {
+		results = append(results, v)
+	}
+
+	expected := []bool{true}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestTakeByte(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
