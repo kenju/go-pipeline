@@ -54,6 +54,54 @@ func RepeatFnInterface(
 	return ch
 }
 
+// RepeatBool return value via channel from values argument.
+// Use ctx to cancel the stream processing.
+func RepeatBool(
+	ctx context.Context,
+	values ...bool,
+) <-chan bool {
+	ch := make(chan bool)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			for _, v := range values {
+				select {
+				case <-ctx.Done():
+					return
+				case ch <- v:
+				}
+			}
+		}
+	}()
+
+	return ch
+}
+
+// RepeatFnBool call fn() via channel.
+// Use ctx to cancel the stream processing.
+func RepeatFnBool(
+	ctx context.Context,
+	fn func() bool,
+) <-chan bool {
+	ch := make(chan bool)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn():
+			}
+		}
+	}()
+
+	return ch
+}
+
 // RepeatByte return value via channel from values argument.
 // Use ctx to cancel the stream processing.
 func RepeatByte(

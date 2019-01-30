@@ -38,6 +38,37 @@ func TestRepeatFn(t *testing.T) {
 	}
 }
 
+func TestRepeatBool(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []bool
+	for v := range pipeline.TakeBool(ctx, pipeline.RepeatBool(ctx, true), 5) {
+		results = append(results, v)
+	}
+
+	expected := []bool{true, true, true, true, true}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
+func TestRepeatFnBool(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []bool
+	repeatFn := func() bool { return true }
+	for v := range pipeline.TakeBool(ctx, pipeline.RepeatFnBool(ctx, repeatFn), 5) {
+		results = append(results, v)
+	}
+
+	expected := []bool{true, true, true, true, true}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestRepeatByte(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
