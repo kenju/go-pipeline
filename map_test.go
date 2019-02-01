@@ -24,6 +24,22 @@ func TestMapInterface(t *testing.T) {
 	}
 }
 
+func TestMapBool(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []bool
+	mapFn := func(v bool) bool { return !v }
+	for v := range pipeline.MapBool(ctx, mapFn, pipeline.GeneratorBool(ctx, true, false, true)) {
+		results = append(results, v)
+	}
+
+	expected := []bool{false, true, false}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestMapByte(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

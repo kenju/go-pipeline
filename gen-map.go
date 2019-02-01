@@ -30,6 +30,30 @@ func MapInterface(
 	return ch
 }
 
+// MapBool calculate fn(v Bool) to each values from values argument.
+// Use ctx to cancel the stream processing.
+func MapBool(
+	ctx context.Context,
+	fn func(v bool) bool,
+	values <-chan bool,
+) <-chan bool {
+	ch := make(chan bool)
+
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn(v):
+			}
+		}
+	}()
+
+	return ch
+}
+
 // MapByte calculate fn(v Byte) to each values from values argument.
 // Use ctx to cancel the stream processing.
 func MapByte(
