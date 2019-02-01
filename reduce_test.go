@@ -24,6 +24,22 @@ func TestReduceInterface(t *testing.T) {
 	}
 }
 
+func TestReduceBool(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var results []bool
+	reduceFn := func(v, acc bool) bool { return acc || v }
+	for v := range pipeline.ReduceBool(ctx, reduceFn, pipeline.GeneratorBool(ctx, false, false, true)) {
+		results = append(results, v)
+	}
+
+	expected := []bool{false, false, true}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("expected %v, got %v", expected, results)
+	}
+}
+
 func TestReduceByte(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

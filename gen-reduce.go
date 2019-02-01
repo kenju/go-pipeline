@@ -33,6 +33,33 @@ func ReduceInterface(
 	return ch
 }
 
+// ReduceBool reduce values to the accumulator.
+// Use ctx to cancel the stream processing.
+func ReduceBool(
+	ctx context.Context,
+	fn func(v, acc bool) bool,
+	values <-chan bool,
+) <-chan bool {
+	ch := make(chan bool)
+
+	var acc bool
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				acc = fn(v, acc)
+				ch <- acc
+			}
+		}
+	}()
+
+	return ch
+}
+
 // ReduceByte reduce values to the accumulator.
 // Use ctx to cancel the stream processing.
 func ReduceByte(
