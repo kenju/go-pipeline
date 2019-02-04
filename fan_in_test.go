@@ -21,6 +21,21 @@ func ExampleFanInInterface() {
 	}
 }
 
+func ExampleFanInBool() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	numChannels := 3
+	channels := make([]<-chan bool, numChannels)
+	for i := 0; i < numChannels; i++ {
+		channels[i] = pipeline.RepeatBool(ctx, true, false, true)
+	}
+
+	for v := range pipeline.TakeBool(ctx, pipeline.FanInBool(ctx, channels...), 10) {
+		fmt.Printf("%v ", v)
+	}
+}
+
 func ExampleFanInByte() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
