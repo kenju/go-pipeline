@@ -10,7 +10,7 @@ help:
 
 ## Run tests
 test:
-	gotest ./... -failfast -parallel=4 -v
+	gotest ./... -failfast -parallel=4
 
 ## Build binaries
 build:
