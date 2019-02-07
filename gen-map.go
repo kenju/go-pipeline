@@ -102,6 +102,30 @@ func MapString(
 	return ch
 }
 
+// MapUint calculate fn(v Uint) to each values from values argument.
+// Use ctx to cancel the stream processing.
+func MapUint(
+	ctx context.Context,
+	fn func(v uint) uint,
+	values <-chan uint,
+) <-chan uint {
+	ch := make(chan uint)
+
+	go func() {
+		defer close(ch)
+
+		for v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn(v):
+			}
+		}
+	}()
+
+	return ch
+}
+
 // MapInt calculate fn(v Int) to each values from values argument.
 // Use ctx to cancel the stream processing.
 func MapInt(
