@@ -246,6 +246,54 @@ func RepeatFnInt(
 	return ch
 }
 
+// RepeatInt32 return value via channel from values argument.
+// Use ctx to cancel the stream processing.
+func RepeatInt32(
+	ctx context.Context,
+	values ...int32,
+) <-chan int32 {
+	ch := make(chan int32)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			for _, v := range values {
+				select {
+				case <-ctx.Done():
+					return
+				case ch <- v:
+				}
+			}
+		}
+	}()
+
+	return ch
+}
+
+// RepeatFnInt32 call fn() via channel.
+// Use ctx to cancel the stream processing.
+func RepeatFnInt32(
+	ctx context.Context,
+	fn func() int32,
+) <-chan int32 {
+	ch := make(chan int32)
+
+	go func() {
+		defer close(ch)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- fn():
+			}
+		}
+	}()
+
+	return ch
+}
+
 // RepeatUint return value via channel from values argument.
 // Use ctx to cancel the stream processing.
 func RepeatUint(
