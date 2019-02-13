@@ -4,7 +4,7 @@ import (
 	"context"
 	)
 
-//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},bool,byte,string,int,uint,uint64,float32,float64"
+//go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "GenType=interface{},bool,byte,string,int,int32,uint,uint64,float32,float64"
 
 // GeneratorGenType generates channels from GenType array
 // Use ctx to cancel the stream processing.

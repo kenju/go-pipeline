@@ -121,6 +121,29 @@ func GeneratorInt(
 	return ch
 }
 
+// GeneratorInt32 generates channels from int32 array
+// Use ctx to cancel the stream processing.
+func GeneratorInt32(
+	ctx context.Context,
+	values ...int32,
+) <-chan int32 {
+	ch := make(chan int32, len(values))
+
+	go func() {
+		defer close(ch)
+
+		for _, v := range values {
+			select {
+			case <-ctx.Done():
+				return
+			case ch <- v:
+			}
+		}
+	}()
+
+	return ch
+}
+
 // GeneratorUint generates channels from uint array
 // Use ctx to cancel the stream processing.
 func GeneratorUint(
